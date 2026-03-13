@@ -30,9 +30,9 @@ class TotalConnectDataCoordinator(DataUpdateCoordinator):
         )
 
     async def _async_update_data(self) -> dict[str, Any]:
-        """Update data via library."""
+        """Update data via enhanced library."""
         try:
-            # Import here to avoid circular imports
+            # Import the enhanced library
             from total_connect_client import TotalConnectClient
 
             if not self.client:
@@ -57,20 +57,22 @@ class TotalConnectDataCoordinator(DataUpdateCoordinator):
                     "devices": {},
                 }
 
-                # Get garage doors
+                # Get garage doors using enhanced library
                 try:
                     garage_doors = location.get_garage_doors()
                     data["garage_doors"][location_id] = garage_doors
                     location_data["garage_doors"] = garage_doors
+                    _LOGGER.info(f"Found {len(garage_doors)} garage doors for location {location_id}")
                 except Exception as err:
                     _LOGGER.warning(f"Failed to get garage doors for location {location_id}: {err}")
                     location_data["garage_doors"] = {}
 
-                # Get smart locks
+                # Get smart locks using enhanced library
                 try:
                     smart_locks = location.get_smart_locks()
                     data["smart_locks"][location_id] = smart_locks
                     location_data["smart_locks"] = smart_locks
+                    _LOGGER.info(f"Found {len(smart_locks)} smart locks for location {location_id}")
                 except Exception as err:
                     _LOGGER.warning(f"Failed to get smart locks for location {location_id}: {err}")
                     location_data["smart_locks"] = {}
@@ -83,25 +85,29 @@ class TotalConnectDataCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Error communicating with Total Connect: {err}")
 
     async def async_control_smart_lock(self, location_id: str, device_id: str, action: str) -> bool:
-        """Control a smart lock."""
+        """Control a smart lock using enhanced library."""
         try:
             if not self.client:
                 await self._async_update_data()
 
             location = self.client.locations[location_id]
-            return location.control_smart_lock(device_id, action)
+            result = location.control_smart_lock(device_id, action)
+            _LOGGER.info(f"Smart lock {device_id} {action} result: {result}")
+            return result
         except Exception as err:
             _LOGGER.error(f"Failed to control smart lock {device_id}: {err}")
             return False
 
     async def async_control_garage_door(self, location_id: str, device_id: str, action: str) -> bool:
-        """Control a garage door."""
+        """Control a garage door using enhanced library."""
         try:
             if not self.client:
                 await self._async_update_data()
 
             location = self.client.locations[location_id]
-            return location.control_garage_door(device_id, action)
+            result = location.control_garage_door(device_id, action)
+            _LOGGER.info(f"Garage door {device_id} {action} result: {result}")
+            return result
         except Exception as err:
             _LOGGER.error(f"Failed to control garage door {device_id}: {err}")
             return False
