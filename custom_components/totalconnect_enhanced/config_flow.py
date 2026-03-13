@@ -37,9 +37,9 @@ class TotalConnectEnhancedConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Test credentials
             try:
                 # Import from the local enhanced library
-                from .total_connect_client import TotalConnectClient
+                from . import client as total_connect_client
 
-                client = TotalConnectClient(
+                client = total_connect_client.TotalConnectClient(
                     self._username, 
                     self._password, 
                     {"default": user_input.get(CONF_USERCODE, "1234")}
