@@ -4,8 +4,6 @@ import urllib.parse
 from enum import Enum
 from typing import Any, Final
 
-from .exceptions import BadResultCodeError
-
 # Home Assistant integration constants
 DOMAIN: Final[str] = "totalconnect_enhanced"
 CONF_USERCODE: Final[str] = "usercode"
