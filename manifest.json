@@ -2,10 +2,10 @@
   "domain": "totalconnect_enhanced",
   "name": "Total Connect Enhanced",
   "version": "1.0.0",
-  "documentation": "https://github.com/justincase/total-connect-enhanced",
-  "issue_tracker": "https://github.com/justincase/total-connect-enhanced/issues",
+  "documentation": "https://github.com/JTruj1ll0923/total-connect-enhanced",
+  "issue_tracker": "https://github.com/JTruj1ll0923/total-connect-enhanced/issues",
   "dependencies": [],
-  "codeowners": ["@justincase"],
+  "codeowners": ["@JTruj1ll0923"],
   "requirements": ["requests-oauthlib", "pycryptodome"],
   "config_flow": true,
   "iot_class": "local_polling"
