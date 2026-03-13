@@ -36,7 +36,8 @@ class TotalConnectEnhancedConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Test credentials
             try:
-                from total_connect_client import TotalConnectClient
+                # Import from the local enhanced library
+                from .total_connect_client import TotalConnectClient
 
                 client = TotalConnectClient(
                     self._username, 
@@ -56,6 +57,9 @@ class TotalConnectEnhancedConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 else:
                     errors["base"] = "invalid_auth"
 
+            except ImportError:
+                _LOGGER.error("Failed to import total_connect_client")
+                errors["base"] = "import_error"
             except Exception as err:
                 _LOGGER.error(f"Error testing credentials: {err}")
                 errors["base"] = "cannot_connect"

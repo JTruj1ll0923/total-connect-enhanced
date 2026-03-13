@@ -13,7 +13,8 @@
     },
     "error": {
       "invalid_auth": "Invalid authentication",
-      "cannot_connect": "Failed to connect to Total Connect"
+      "cannot_connect": "Failed to connect to Total Connect",
+      "import_error": "Failed to import library - please restart Home Assistant"
     }
   }
 }
