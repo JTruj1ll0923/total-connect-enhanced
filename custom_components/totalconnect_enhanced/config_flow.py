@@ -39,13 +39,18 @@ class TotalConnectEnhancedConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Import from the local enhanced library
                 from . import client as total_connect_client
 
-                client = total_connect_client.TotalConnectClient(
-                    self._username, 
-                    self._password, 
-                    {"default": user_input.get(CONF_USERCODE, "1234")}
-                )
+                # Test credentials in an executor to avoid blocking calls
+                def test_credentials():
+                    client = total_connect_client.TotalConnectClient(
+                        self._username, 
+                        self._password, 
+                        {"default": user_input.get(CONF_USERCODE, "1234")}
+                    )
+                    return client.is_logged_in()
 
-                if client.is_logged_in():
+                is_logged_in = await self.hass.async_add_executor_job(test_credentials)
+
+                if is_logged_in:
                     return self.async_create_entry(
                         title="Total Connect Enhanced",
                         data={
