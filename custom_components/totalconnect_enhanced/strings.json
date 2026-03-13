@@ -1,0 +1,19 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Total Connect Enhanced",
+        "description": "Connect to your Total Connect 2.0 system with enhanced garage door and smart lock support.",
+        "data": {
+          "username": "Username",
+          "password": "Password",
+          "usercode": "User Code (optional, defaults to 1234)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid authentication",
+      "cannot_connect": "Failed to connect to Total Connect"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+control_smart_lock:
+  name: Control Smart Lock
+  description: Control a Total Connect smart lock
+  fields:
+    entity_id:
+      name: Entity
+      description: Smart lock entity to control
+      required: true
+      selector:
+        entity:
+          domain: lock
+    action:
+      name: Action
+      description: Action to perform
+      required: true
+      selector:
+        select:
+          options:
+            - "lock"
+            - "unlock"
+
+control_garage_door:
+  name: Control Garage Door
+  description: Control a Total Connect garage door
+  fields:
+    entity_id:
+      name: Entity
+      description: Garage door entity to control
+      required: true
+      selector:
+        entity:
+          domain: cover
+    action:
+      name: Action
+      description: Action to perform
+      required: true
+      selector:
+        select:
+          options:
+            - "open"
+            - "close"

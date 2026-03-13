@@ -1,0 +1,12 @@
+{
+  "domain": "totalconnect_enhanced",
+  "name": "Total Connect Enhanced",
+  "version": "1.0.0",
+  "documentation": "https://github.com/justincase/total-connect-enhanced",
+  "issue_tracker": "https://github.com/justincase/total-connect-enhanced/issues",
+  "dependencies": [],
+  "codeowners": ["@justincase"],
+  "requirements": ["requests-oauthlib", "pycryptodome"],
+  "config_flow": true,
+  "iot_class": "local_polling"
+}
