@@ -33,53 +33,57 @@ class TotalConnectDataCoordinator(DataUpdateCoordinator):
         """Update data via enhanced library."""
         try:
             # Import the enhanced library
-            from total_connect_client import TotalConnectClient
+            from . import client as total_connect_client
 
-            if not self.client:
-                self.client = TotalConnectClient(self.username, self.password, {"default": self.usercode})
+            def get_client_data():
+                if not self.client:
+                    self.client = total_connect_client.TotalConnectClient(self.username, self.password, {"default": self.usercode})
 
-            if not self.client.is_logged_in():
-                self.client.login()
                 if not self.client.is_logged_in():
-                    raise UpdateFailed("Failed to login to Total Connect")
+                    self.client.login()
+                    if not self.client.is_logged_in():
+                        raise Exception("Failed to login to Total Connect")
 
-            # Get all location data
-            data = {
-                "locations": {},
-                "garage_doors": {},
-                "smart_locks": {},
-            }
-
-            for location_id, location in self.client.locations.items():
-                location_data = {
-                    "id": location_id,
-                    "name": location.location_name,
-                    "devices": {},
+                # Get all location data
+                data = {
+                    "locations": {},
+                    "garage_doors": {},
+                    "smart_locks": {},
                 }
 
-                # Get garage doors using enhanced library
-                try:
-                    garage_doors = location.get_garage_doors()
-                    data["garage_doors"][location_id] = garage_doors
-                    location_data["garage_doors"] = garage_doors
-                    _LOGGER.info(f"Found {len(garage_doors)} garage doors for location {location_id}")
-                except Exception as err:
-                    _LOGGER.warning(f"Failed to get garage doors for location {location_id}: {err}")
-                    location_data["garage_doors"] = {}
+                for location_id, location in self.client.locations.items():
+                    location_data = {
+                        "id": location_id,
+                        "name": location.location_name,
+                        "devices": {},
+                    }
 
-                # Get smart locks using enhanced library
-                try:
-                    smart_locks = location.get_smart_locks()
-                    data["smart_locks"][location_id] = smart_locks
-                    location_data["smart_locks"] = smart_locks
-                    _LOGGER.info(f"Found {len(smart_locks)} smart locks for location {location_id}")
-                except Exception as err:
-                    _LOGGER.warning(f"Failed to get smart locks for location {location_id}: {err}")
-                    location_data["smart_locks"] = {}
+                    # Get garage doors using enhanced library
+                    try:
+                        garage_doors = location.get_garage_doors()
+                        data["garage_doors"][location_id] = garage_doors
+                        location_data["garage_doors"] = garage_doors
+                        _LOGGER.info(f"Found {len(garage_doors)} garage doors for location {location_id}")
+                    except Exception as err:
+                        _LOGGER.warning(f"Failed to get garage doors for location {location_id}: {err}")
+                        location_data["garage_doors"] = {}
 
-                data["locations"][location_id] = location_data
+                    # Get smart locks using enhanced library
+                    try:
+                        smart_locks = location.get_smart_locks()
+                        data["smart_locks"][location_id] = smart_locks
+                        location_data["smart_locks"] = smart_locks
+                        _LOGGER.info(f"Found {len(smart_locks)} smart locks for location {location_id}")
+                    except Exception as err:
+                        _LOGGER.warning(f"Failed to get smart locks for location {location_id}: {err}")
+                        location_data["smart_locks"] = {}
 
-            return data
+                    data["locations"][location_id] = location_data
+
+                return data
+
+            # Execute blocking calls in executor
+            return await self.hass.async_add_executor_job(get_client_data)
 
         except Exception as err:
             raise UpdateFailed(f"Error communicating with Total Connect: {err}")

@@ -23,7 +23,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.info("Setting up Total Connect Enhanced integration")
     
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = entry.data
+    
+    # Create coordinator
+    from .coordinator import TotalConnectDataCoordinator
+    coordinator = TotalConnectDataCoordinator(
+        hass,
+        entry.data["username"],
+        entry.data["password"],
+        entry.data["usercode"]
+    )
+    
+    # Store coordinator and entry data
+    hass.data[DOMAIN][entry.entry_id] = {
+        "coordinator": coordinator,
+        "entry": entry.data
+    }
+    
+    # First refresh to get data
+    await coordinator.async_config_entry_first_refresh()
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     
