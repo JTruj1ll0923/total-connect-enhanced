@@ -11,6 +11,10 @@ DOMAIN: Final[str] = "totalconnect_enhanced"
 CONF_USERCODE: Final[str] = "usercode"
 SCAN_INTERVAL: Final[int] = 30
 
+# Device types
+DEVICE_TYPE_SMART_LOCK: Final[str] = "smart_lock"
+DEVICE_TYPE_GARAGE_DOOR: Final[str] = "garage_door"
+
 
 class ArmType(Enum):
     """Represent ArmingType."""
