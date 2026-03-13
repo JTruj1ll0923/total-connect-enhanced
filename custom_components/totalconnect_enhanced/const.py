@@ -6,6 +6,11 @@ from typing import Any, Final
 
 from .exceptions import BadResultCodeError
 
+# Home Assistant integration constants
+DOMAIN: Final[str] = "totalconnect_enhanced"
+CONF_USERCODE: Final[str] = "usercode"
+SCAN_INTERVAL: Final[int] = 30
+
 
 class ArmType(Enum):
     """Represent ArmingType."""
